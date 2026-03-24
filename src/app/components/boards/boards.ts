@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { Board } from '../../shared/models/board.model';
 import {BoardService} from './board-service';
 import { RouterLink } from '@angular/router';
@@ -11,28 +11,28 @@ import { RouterLink } from '@angular/router';
   styleUrl: './boards.css',
 })
 export class Boards implements OnInit {
-  boards: Board[] = [];
-  loading = false;
-  error: string | null = null;
+  boards = signal<Board[]>([]);
+  loading = signal(false);
+  error = signal<string | null>(null);
 
-  constructor(private boardService: BoardService) {}
+  constructor(private readonly boardService: BoardService) {}
 
   ngOnInit() {
     this.loadBoards();
   }
 
   loadBoards(): void {
-    this.loading = true;
-    this.error = null;
+    this.loading.set(true);
+    this.error.set(null);
 
     this.boardService.getBoards().subscribe({
       next: (boards) => {
-        this.boards = boards;
-        this.loading = false;
+        this.boards.set(boards);
+        this.loading.set(false);
       },
       error: (err) => {
-        this.loading = false;
-        this.error = 'Errore durante il caricamento delle board';
+        this.loading.set(false);
+        this.error.set('Errore durante il caricamento delle board');
         console.error(err);
       },
     });
