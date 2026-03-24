@@ -1,0 +1,26 @@
+<div class="board-list">
+  <h2>Le tue board</h2>
+
+  @if (error) {
+    <div style="color: red">{{ error }}</div>
+  }
+
+  @if (loading) {
+    <div>Caricamento...</div>
+  }
+
+  @if (!loading && !error) {
+    <ul>
+      @for (board of boards; track $index) {
+        <li>
+          <a [routerLink]="['/boards', board.id]">
+            <strong>{{ board.name }}</strong>
+            @if (board.description) {
+              <span> - {{ board.description }}</span>
+            }
+          </a>
+        </li>
+      }
+    </ul>
+  }
+</div>
