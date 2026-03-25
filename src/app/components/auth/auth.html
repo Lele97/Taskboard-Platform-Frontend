@@ -1,25 +1,97 @@
-<div class="login-container">
-  <h2>Taskboard Login</h2>
+<div class="auth-wrapper d-flex justify-content-center align-items-center">
+  <div class="glass-card auth-card">
+    <!-- Tab Navigation -->
+    <ul class="nav nav-pills nav-justified mb-4">
+      <li class="nav-item">
+        <button
+          class="nav-link w-100"
+          [class.active]="activeTab() === 'login'"
+          (click)="setTab('login')"
+          type="button"
+          [attr.aria-selected]="activeTab() === 'login'"
+        >Login</button>
+      </li>
+      <li class="nav-item">
+        <button
+          class="nav-link w-100"
+          [class.active]="activeTab() === 'register'"
+          (click)="setTab('register')"
+          type="button"
+          [attr.aria-selected]="activeTab() === 'register'"
+        >Register</button>
+      </li>
+    </ul>
 
-  <form [formGroup]="form" (ngSubmit)="submit()">
-    <div>
-      <label for="username">Username</label>
-      <input type="text" id="username" formControlName="username" />
+    <!-- Tabs content -->
+    <div class="tab-content">
+      <!-- Login Pane -->
+      @if (activeTab() === 'login') {
+        <div class="tab-pane fade show active">
+          <form [formGroup]="form" (ngSubmit)="submit()">
+            <div class="text-center mb-4">
+              <h2 class="mb-3 text-gradient">Taskboard Login</h2>
+              <p class="text-muted">Welcome back! Please enter your details.</p>
+            </div>
+
+            <!-- Email/Username input -->
+            <div class="form-outline mb-4">
+              <label class="form-label mb-1 fw-medium" for="loginName">Username</label>
+              <input
+                type="text"
+                id="loginName"
+                class="form-control"
+                formControlName="username"
+                placeholder="Enter your username"
+              />
+            </div>
+
+            <!-- Password input -->
+            <div class="form-outline mb-4">
+              <label class="form-label mb-1 fw-medium" for="loginPassword">Password</label>
+              <input
+                type="password"
+                id="loginPassword"
+                class="form-control"
+                formControlName="password"
+                placeholder="••••••••"
+              />
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="loginCheck" checked />
+                <label class="form-check-label" for="loginCheck"> Remember me </label>
+              </div>
+              <a href="#!" class="forgot-link">Forgot password?</a>
+            </div>
+
+            <!-- Error Alert -->
+            @if (error()) {
+              <div class="alert alert-danger mb-4 text-center">
+                <i class="fas fa-exclamation-circle me-2"></i> {{ error() }}
+              </div>
+            }
+
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-primary btn-block mb-4 w-100" [disabled]="loading() || form.invalid">
+              @if (loading()) {
+                <span class="spinner-border spinner-border-sm me-2"></span>
+              }
+              {{ loading() ? 'Signing in...' : 'Sign in' }}
+            </button>
+
+            <!-- Switch to register button -->
+            <div class="text-center">
+              <p>Not a member? <button type="button" (click)="setTab('register')" class="btn btn-link p-0 fw-bold border-0 align-baseline">Register now</button></p>
+            </div>
+          </form>
+        </div>
+      } @else {
+        <!-- Register Pane -->
+        <div class="tab-pane fade show active">
+          <app-register (switchTab)="setTab($any($event))"></app-register>
+        </div>
+      }
     </div>
-
-    <div>
-      <label for="password">Password</label>
-      <input type="password" id="password" formControlName="password" />
-    </div>
-
-    <button type="submit" [disabled]="loading() || form.invalid">
-      {{ loading() ? 'Login in corso...' : 'Login' }}
-    </button>
-  </form>
-
-
-  @if (error()){
-    <p style="color: red">{{ error() }}</p>
-  }
-
+  </div>
 </div>

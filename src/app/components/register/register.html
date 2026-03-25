@@ -1,0 +1,109 @@
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <div class="text-center mb-4">
+    <h2 class="mb-3 text-gradient">Create Account</h2>
+    <p class="text-muted">Fill in your details to get started.</p>
+  </div>
+
+  <!-- Success Message -->
+  @if (success()) {
+    <div class="alert alert-success mt-3 text-center">
+      <i class="fas fa-check-circle me-2"></i> {{ success() }}
+    </div>
+  }
+
+  <!-- Error Message -->
+  @if (error()) {
+    <div class="alert alert-danger mt-3 text-center">
+      <i class="fas fa-exclamation-circle me-2"></i> {{ error() }}
+    </div>
+  }
+
+  <!-- Username input -->
+  <div class="form-outline mb-4">
+    <label class="form-label mb-1 fw-medium" for="registerUsername">Username</label>
+    <input
+      type="text"
+      id="registerUsername"
+      class="form-control"
+      formControlName="username"
+      [class.is-invalid]="form.get('username')?.invalid && form.get('username')?.touched"
+      placeholder="Username"
+    />
+    @if (form.get('username')?.invalid && form.get('username')?.touched) {
+      <div class="invalid-feedback text-danger">
+        @if (form.get('username')?.errors?.['required']) { Username required. }
+        @if (form.get('username')?.errors?.['minlength']) { Username must be at least 3 chars. }
+      </div>
+    }
+  </div>
+
+  <!-- Email input -->
+  <div class="form-outline mb-4">
+    <label class="form-label mb-1 fw-medium" for="registerEmail">Email</label>
+    <input
+      type="email"
+      id="registerEmail"
+      class="form-control"
+      formControlName="email"
+      [class.is-invalid]="form.get('email')?.invalid && form.get('email')?.touched"
+      placeholder="Email address"
+    />
+    @if (form.get('email')?.invalid && form.get('email')?.touched) {
+      <div class="invalid-feedback text-danger">
+        @if (form.get('email')?.errors?.['required']) { Email required. }
+        @if (form.get('email')?.errors?.['email']) { Invalid email format. }
+      </div>
+    }
+  </div>
+
+  <!-- Password input -->
+  <div class="form-outline mb-4">
+    <label class="form-label mb-1 fw-medium" for="registerPassword">Password</label>
+    <input
+      type="password"
+      id="registerPassword"
+      class="form-control"
+      formControlName="password"
+      [class.is-invalid]="form.get('password')?.invalid && form.get('password')?.touched"
+      placeholder="••••••••"
+    />
+    @if (form.get('password')?.invalid && form.get('password')?.touched) {
+      <div class="invalid-feedback text-danger">
+        @if (form.get('password')?.errors?.['required']) { Password required. }
+        @if (form.get('password')?.errors?.['minlength']) { Min 6 chars. }
+      </div>
+    }
+  </div>
+
+  <!-- Repeat Password input -->
+  <div class="form-outline mb-4">
+    <label class="form-label mb-1 fw-medium" for="registerRepeatPassword">Repeat password</label>
+    <input
+      type="password"
+      id="registerRepeatPassword"
+      class="form-control"
+      formControlName="confirmPassword"
+      [class.is-invalid]="form.get('confirmPassword')?.touched && (form.get('confirmPassword')?.errors || form.hasError('mismatch'))"
+      placeholder="••••••••"
+    />
+    @if (form.get('confirmPassword')?.touched && (form.get('confirmPassword')?.errors || form.hasError('mismatch'))) {
+      <div class="invalid-feedback text-danger">Passwords must match.</div>
+    }
+  </div>
+
+  <!-- Submit button -->
+  <button
+    type="submit"
+    class="btn btn-primary btn-block mb-3 w-100"
+    [disabled]="loading() || form.invalid"
+  >
+    @if (loading()) {
+      <span class="spinner-border spinner-border-sm me-2"></span>
+    }
+    {{ loading() ? 'Signing up...' : 'Sign up' }}
+  </button>
+
+  <div class="text-center">
+    <p>Already have an account? <button type="button" (click)="goToLogin()" class="btn btn-link p-0 fw-bold border-0 align-baseline text-decoration-none">Log in</button></p>
+  </div>
+</form>

@@ -31,9 +31,9 @@ export class AuthService {
     );
   }
 
-  register(username: string, password: string): Observable<string> {
+  register(username: string, email: string, password: string): Observable<string> {
     const url = `${env.apiBaseUrl}/auth/register`;
-    return this.http.post(url, { username, password }, { responseType: 'text' });
+    return this.http.post(url, { username, email, password }, { responseType: 'text' });
   }
 
   setToken(token: string): void {

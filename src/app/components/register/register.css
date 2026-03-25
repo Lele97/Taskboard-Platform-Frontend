@@ -1,0 +1,40 @@
+:host {
+  display: block;
+}
+
+.form-outline {
+  position: relative;
+}
+
+.invalid-feedback {
+  font-size: 0.8rem;
+  margin-top: 0.2rem;
+}
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.alert {
+  padding: 0.75rem 1.25rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  font-weight: 500;
+}
+
+.alert-success {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #065f46; /* Darker green for contrast */
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.alert-danger {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #991b1b; /* Darker red for contrast */
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}

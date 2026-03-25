@@ -2,17 +2,21 @@ import { Component, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from './auth-service';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { Register } from '../register/register';
 
 @Component({
   selector: 'app-auth',
-  imports: [ReactiveFormsModule],
-  templateUrl: './auth.html',
   standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, Register],
+  templateUrl: './auth.html',
+  styleUrl: './auth.css',
 })
 export class Auth {
   form: FormGroup;
   error = signal<string | null>(null);
   loading = signal(false);
+  activeTab = signal<'login' | 'register'>('login');
 
   constructor(
     private readonly fb: FormBuilder,
@@ -23,6 +27,11 @@ export class Auth {
       username: ['', [Validators.required]],
       password: ['', [Validators.required]],
     });
+  }
+
+  setTab(tab: 'login' | 'register'): void {
+    this.activeTab.set(tab);
+    this.error.set(null);
   }
 
   submit(): void {
@@ -41,7 +50,7 @@ export class Auth {
       },
       error: (err) => {
         this.loading.set(false);
-        this.error.set('Credenziali non valide');
+        this.error.set('Credenziali non valide. Riprova.');
         console.error(err);
       },
     });
