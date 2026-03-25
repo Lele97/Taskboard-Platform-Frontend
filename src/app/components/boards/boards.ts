@@ -1,4 +1,5 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Board } from '../../shared/models/board.model';
 import {BoardService} from './board-service';
 import { RouterLink } from '@angular/router';
@@ -15,10 +16,15 @@ export class Boards implements OnInit {
   loading = signal(false);
   error = signal<string | null>(null);
 
-  constructor(private readonly boardService: BoardService) {}
+  constructor(
+    private readonly boardService: BoardService,
+    @Inject(PLATFORM_ID) private readonly platformId: Object
+  ) {}
 
   ngOnInit() {
-    this.loadBoards();
+    if (isPlatformBrowser(this.platformId)) {
+      this.loadBoards();
+    }
   }
 
   loadBoards(): void {

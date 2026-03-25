@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { env } from '../../environments/env';
 import { Observable, tap } from 'rxjs';
@@ -18,7 +19,7 @@ interface TokenResponse {
 export class AuthService {
   private readonly TOKEN_KEY = 'taskboard_jwt';
 
-  constructor(private http: HttpClient) {}
+  constructor(@Inject(PLATFORM_ID) private readonly platformId: Object, private readonly http: HttpClient) {}
 
   login(username: string, password: string): Observable<TokenResponse> {
     const url = `${env.apiBaseUrl}/auth/token`;
@@ -36,15 +37,22 @@ export class AuthService {
   }
 
   setToken(token: string): void {
-    localStorage.setItem(this.TOKEN_KEY, token);
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem(this.TOKEN_KEY, token);
+    }
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+    if (isPlatformBrowser(this.platformId)) {
+      return localStorage.getItem(this.TOKEN_KEY);
+    }
+    return null;
   }
 
   clearToken(): void {
-    localStorage.removeItem(this.TOKEN_KEY);
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem(this.TOKEN_KEY);
+    }
   }
 
   isLoggedIn(): boolean {

@@ -1,17 +1,26 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { env } from '../../environments/env';
 import { Observable } from 'rxjs';
 import { Board } from '../../shared/models/board.model';
+import { AuthService } from '../auth/auth-service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BoardService {
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient, private readonly authService: AuthService) {}
 
   getBoards(): Observable<Board[]> {
     const url = `${env.apiBaseUrl}/api/projects/boards`;
-    return this.http.get<Board[]>(url);
+    const token = this.authService.getToken();
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+    return this.http.get<Board[]>(url, {
+      headers: headers,
+    });
   }
 }
