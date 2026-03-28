@@ -1,0 +1,4 @@
+.board-wrapper {
+  height: 100vh; /* Adjust based on header/footer */
+  padding: 2rem;
+}

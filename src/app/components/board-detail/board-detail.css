@@ -1,0 +1,169 @@
+/* ── Host ── */
+:host {
+  display: block;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── Wrapper principale: colonna verticale a tutta altezza ── */
+.board-detail-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── Header fisso in cima ── */
+.board-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 2rem;
+  flex-shrink: 0; /* non si restringe mai */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* ── Kanban: prende tutto lo spazio rimanente ── */
+.kanban-container {
+  flex: 1; /* espande per riempire il resto dell'altezza */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Riga kanban: orizzontale, scrollabile ── */
+.kanban-row {
+  flex: 1;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  align-items: stretch; /* le colonne si allungano tutte uguale */
+  padding-bottom: 1rem;
+  height: 100%;
+}
+
+/* ── Colonna kanban: altezza piena ── */
+.kanban-column {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* prende tutta l'altezza della riga */
+  min-width: 300px;
+}
+
+/* ── Lista card: scorre internamente ── */
+.card-list {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+  padding-right: 4px; /* evita che la scrollbar copra le card */
+}
+
+/* col-12 col-md-4 devono avere altezza piena */
+.kanban-row > div[class*="col-"] {
+  height: 100%;
+}
+
+/* ── Drag & Drop ── */
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.cdk-drop-list-dragging .task-card:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.cdk-drag-preview {
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+  opacity: 0.95;
+  transform: rotate(1.5deg) scale(1.02);
+  cursor: grabbing;
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.task-card-placeholder {
+  border: 2px dashed rgba(99, 102, 241, 0.5);
+  background: rgba(99, 102, 241, 0.05);
+  border-radius: 12px;
+  min-height: 80px;
+  transition: all 200ms ease;
+}
+
+.cdk-drop-list-receiving {
+  background: rgba(99, 102, 241, 0.04);
+  border-radius: 12px;
+  transition: background 200ms ease;
+}
+
+/* ── Task card ── */
+.task-card {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  cursor: grab;
+  transition: box-shadow 200ms ease, transform 200ms ease;
+  will-change: transform;
+}
+
+.task-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.task-card:active {
+  cursor: grabbing;
+}
+
+/* ── Add card button ── */
+.btn-add-card {
+  color: var(--text-muted);
+  border-color: #cbd5e1;
+  border-style: dashed;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border-radius: 12px;
+}
+
+.btn-add-card:hover {
+  background-color: rgba(79, 70, 229, 0.05);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+/* ── Form crea card ── */
+.create-card-form {
+  border-radius: 16px;
+  border: 1px solid var(--primary-color) !important;
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .kanban-row {
+    flex-wrap: wrap;
+    overflow-x: visible;
+    overflow-y: auto;
+    height: auto;
+  }
+
+  .kanban-column {
+    height: auto;
+    min-height: 400px;
+  }
+
+  .kanban-row > div[class*="col-"] {
+    height: auto;
+  }
+
+  .card-list {
+    max-height: 50vh;
+  }
+}

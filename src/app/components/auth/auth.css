@@ -1,5 +1,5 @@
 .auth-wrapper {
-  min-height: calc(100vh - 100px); /* Adjust based on header/footer */
+  height: 100vh; /* Adjust based on header/footer */
   padding: 2rem;
 }
 

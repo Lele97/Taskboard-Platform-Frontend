@@ -10,6 +10,10 @@ export const routes: Routes = [
     loadComponent: () => import('./components/boards/boards').then((m) => m.Boards),
   },
   {
+    path: 'boards/:id',
+    loadComponent: () => import('./components/board-detail/board-detail').then((m) => m.BoardDetail),
+  },
+  {
     path: '',
     pathMatch: 'full',
     redirectTo: 'auth',

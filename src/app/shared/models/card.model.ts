@@ -1,7 +1,7 @@
 export interface Card {
   id: string;
   boardId: string;
-  column: string; // "TODO" | "IN_PROGRESS" | "DONE" ecc.
+  column: string;
   title: string;
   description?: string;
   assigneeUserId?: string;

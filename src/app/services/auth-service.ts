@@ -1,7 +1,7 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { env } from '../../environments/env';
+import { env } from '../environments/env';
 import { Observable, tap } from 'rxjs';
 
 interface LoginRequest {

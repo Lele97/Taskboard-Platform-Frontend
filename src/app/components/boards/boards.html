@@ -1,6 +1,6 @@
-<div class="board-list">
-  <h2>Le tue board</h2>
 
+<div class="board-wrapper d-flex justify-content-center align-items-center">
+  <h2>Le tue board</h2>
   @if (error()) {
     <div style="color: red">{{ error() }}</div>
   }
@@ -10,17 +10,22 @@
   }
 
   @if (!loading() && !error()) {
-    <ul>
-      @for (board of boards(); track $index) {
-        <li>
-          <a [routerLink]="['/boards', board.id]">
-            <strong>{{ board.name }}</strong>
-            @if (board.description) {
-              <span> - {{ board.description }}</span>
-            }
-          </a>
-        </li>
-      }
-    </ul>
+    @for (board of boards(); track $index) {
+      <div class="card" style="width: 18rem;">
+        <img src="https://mdbcdn.b-cdn.net/img/new/standard/city/062.webp" class="card-img-top"
+             alt="Chicago Skyscrapers" />
+        <div class="card-body">
+          <a [routerLink]="['/boards', board.id]"><strong>{{ board.name }}</strong></a>
+          @if (board.description) {
+            <p class="card-text">{{ board.description }}</p>
+          }
+        </div>
+        <ul class="list-group list-group-light list-group-small">
+          <li class="list-group-item px-4">{{board.ownerUserId}}</li>
+          <li class="list-group-item px-4">{{board.createdAt}}</li>
+          <li class="list-group-item px-4">{{board.updatedAt}}</li>
+        </ul>
+      </div>
+    }
   }
 </div>

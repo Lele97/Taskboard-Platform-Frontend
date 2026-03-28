@@ -1,0 +1,138 @@
+<div class="board-detail-wrapper">
+
+  <div class="board-header">
+    <div>
+      @if (board()) {
+        <h1 class="text-gradient mb-1">{{ board()?.name }}</h1>
+        <p class="text-muted mb-0">{{ board()?.description }}</p>
+      } @else if (loading()) {
+        <div class="d-flex align-items-center gap-3">
+          <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+          <h2 class="text-muted mb-0">Caricamento board...</h2>
+        </div>
+      }
+    </div>
+    <button class="btn btn-outline-primary" routerLink="/boards">
+      <i class="fas fa-arrow-left me-2"></i> Torna alle Board
+    </button>
+  </div>
+
+  @if (error()) {
+    <div class="container mt-4">
+      <div class="alert alert-danger text-center glass-card">
+        <i class="fas fa-exclamation-triangle me-2"></i> {{ error() }}
+      </div>
+    </div>
+  }
+
+  <div class="kanban-container px-4 pb-4">
+    <div cdkDropListGroup class="row g-4 kanban-row">
+      @for (col of columns; track col.key) {
+        <div class="col-12 col-md-4">
+          <div
+            class="kanban-column glass-card"
+            cdkDropList
+            [id]="col.key"
+            [cdkDropListData]="col.key === 'TODO' ? todoCards() : col.key === 'IN_PROGRESS' ? inProgressCards() : doneCards()"
+            (cdkDropListDropped)="drop($event)"
+          >
+            <div class="column-header d-flex justify-content-between align-items-center mb-4">
+              <h4 class="mb-0">{{ col.title }}</h4>
+              <span class="badge rounded-pill bg-primary opacity-75">
+              {{ (col.key === 'TODO' ? todoCards() : col.key === 'IN_PROGRESS' ? inProgressCards() : doneCards()).length }}
+            </span>
+            </div>
+
+            <!-- Card List Container -->
+            <div class="card-list d-flex flex-column gap-3">
+              @for (
+                card of (col.key === 'TODO' ? todoCards() : col.key === 'IN_PROGRESS' ? inProgressCards() : doneCards()); track card.id) {
+                <div class="task-card glass-card p-3" [cdkDragStartDelay]="0" cdkDrag [cdkDragData]="card">
+                  <div *cdkDragPreview class="d-flex justify-content-between align-items-start mb-2">
+                    <h6 class="mb-0 fw-bold">{{ card.title }}</h6>
+                    <div class="dropdown">
+                      <button class="btn btn-link p-0 text-muted" type="button" data-bs-toggle="dropdown"
+                              aria-expanded="false">
+                        <i class="fas fa-ellipsis-v"></i>
+                      </button>
+                      <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                        <li>
+                          <button class="dropdown-item text-danger" (click)="deleteCard(card.id)"><i
+                            class="fas fa-trash-alt me-2"></i>Elimina
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <p class="small text-muted mb-3">{{ card.description }}</p>
+
+                  <div class="d-flex justify-content-between align-items-center mt-auto">
+                    <div class="d-flex gap-1">
+                      @if (col.key !== 'TODO') {
+                        <button class="btn btn-sm btn-light p-1 px-2" (click)="moveCard(card, 'TODO')"
+                                title="Sposta a sinistra">
+                          <i class="fas fa-chevron-left"></i>
+                        </button>
+                      }
+                      @if (col.key !== 'DONE') {
+                        <button class="btn btn-sm btn-light p-1 px-2"
+                                (click)="moveCard(card, col.key === 'TODO' ? 'IN_PROGRESS' : 'DONE')"
+                                title="Sposta a destra">
+                          <i class="fas fa-chevron-right"></i>
+                        </button>
+                      }
+                    </div>
+                    <small class="text-muted"
+                           style="font-size: 0.7rem;">Modificato: {{ card.updatedAt | date:'shortTime' }}</small>
+                  </div>
+
+                  <!-- Placeholder when dragging -->
+                  <div *cdkDragPlaceholder class="task-card-placeholder"></div>
+                </div>
+              } @empty {
+                <div class="empty-col-message text-center py-5 text-muted small opacity-50 border-dashed rounded-3">
+                  Nessuna card presente
+                </div>
+              }
+            </div>
+
+            <!-- Add Card Section -->
+            <div class="mt-auto pt-3">
+              @if (showCreateFormForCol() === col.key) {
+                <div class="create-card-form glass-card p-3 border-0">
+                  <input
+                    type="text"
+                    class="form-control mb-2"
+                    placeholder="Inserisci titolo..."
+                    [(ngModel)]="newCardTitle"
+                    (keyup.enter)="createCard(col.key)"
+                  >
+                  <textarea
+                    class="form-control mb-3"
+                    rows="2"
+                    placeholder="Descrizione (opzionale)..."
+                    [(ngModel)]="newCardDescription"
+                  ></textarea>
+                  <div class="d-flex gap-2">
+                    <button class="btn btn-primary btn-sm px-3" (click)="createCard(col.key)"
+                            [disabled]="loading() || !newCardTitle.trim()">
+                      @if (loading()) {
+                        <span class="spinner-border spinner-border-sm me-1"></span>
+                      }
+                      Salva
+                    </button>
+                    <button class="btn btn-light btn-sm px-3" (click)="resetForm()">Chiudi</button>
+                  </div>
+                </div>
+              } @else {
+                <button class="btn btn-add-card w-100 py-2 border-dashed" (click)="showCreateFormForCol.set(col.key)">
+                  <i class="fas fa-plus me-2"></i> Aggiungi Task
+                </button>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

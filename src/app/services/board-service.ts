@@ -1,15 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { env } from '../../environments/env';
+import { env } from '../environments/env';
 import { Observable } from 'rxjs';
-import { Board } from '../../shared/models/board.model';
-import { AuthService } from '../auth/auth-service';
+import { Board } from '../shared/models/board.model';
+import { AuthService } from './auth-service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BoardService {
-  constructor(private readonly http: HttpClient, private readonly authService: AuthService) {}
+  constructor(
+    private readonly http: HttpClient,
+    private readonly authService: AuthService,
+  ) {}
 
   getBoards(): Observable<Board[]> {
     const url = `${env.apiBaseUrl}/api/projects/boards`;
@@ -24,7 +27,7 @@ export class BoardService {
     });
   }
 
-  getBoardsById(): Observable<Board[]> {
+  getBoardsById(id: string): Observable<Board[]> {
     const url = `${env.apiBaseUrl}/api/projects/boards/${id}`;
     const token = this.authService.getToken();
     const headers = new HttpHeaders({
@@ -34,6 +37,6 @@ export class BoardService {
     });
     return this.http.get<Board[]>(url, {
       headers: headers,
-    })
+    });
   }
 }

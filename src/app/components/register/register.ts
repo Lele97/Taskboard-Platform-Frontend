@@ -1,6 +1,6 @@
 import { Component, signal, output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../auth/auth-service';
+import { AuthService } from '../../services/auth-service';
 import { CommonModule } from '@angular/common';
 
 @Component({
