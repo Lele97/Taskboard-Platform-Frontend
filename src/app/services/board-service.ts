@@ -17,26 +17,23 @@ export class BoardService {
   getBoards(): Observable<Board[]> {
     const url = `${env.apiBaseUrl}/api/projects/boards`;
     const token = this.authService.getToken();
+    /*
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Accept: 'application/json',
       Authorization: `Bearer ${token}`,
-    });
-    return this.http.get<Board[]>(url, {
-      headers: headers,
-    });
+    });*/
+    return this.http.get<Board[]>(url);
   }
 
   getBoardsById(id: string): Observable<Board[]> {
     const url = `${env.apiBaseUrl}/api/projects/boards/${id}`;
     const token = this.authService.getToken();
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      Authorization: `Bearer ${token}`,
-    });
-    return this.http.get<Board[]>(url, {
-      headers: headers,
-    });
+    /*  const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      });*/
+    return this.http.get<Board[]>(url);
   }
 }

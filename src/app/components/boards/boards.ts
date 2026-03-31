@@ -1,13 +1,13 @@
 import { Component, OnInit, signal, Inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser, DatePipe } from '@angular/common';
 import { Board } from '../../shared/models/board.model';
-import {BoardService} from '../../services/board-service';
-import { RouterLink } from '@angular/router';
+import { BoardService } from '../../services/board-service';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-boards',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, DatePipe],
   templateUrl: './boards.html',
   styleUrl: './boards.css',
 })
@@ -18,8 +18,9 @@ export class Boards implements OnInit {
 
   constructor(
     private readonly boardService: BoardService,
+    private readonly router: Router,
     @Inject(PLATFORM_ID) private readonly platformId: Object
-  ) {}
+  ) { }
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
@@ -42,5 +43,17 @@ export class Boards implements OnInit {
         console.error(err);
       },
     });
+  }
+
+  navigateToBoard(boardId: string): void {
+    this.router.navigate(['/boards', boardId]);
+  }
+
+  createNewBoard(): void {
+    // Logic to create a new board
+    console.log('Creating new board');
+    // For now, we'll just navigate to a create board page
+    // You might want to implement a modal or form for this
+    this.router.navigate(['/boards/create']);
   }
 }

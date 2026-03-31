@@ -18,52 +18,44 @@ export class CardService {
     const base = `${env.apiBaseUrl}/api/projects/cards/board/${boardId}`;
     const url = column ? `${base}?column=${column}` : base;
     const token = this.authService.getToken();
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      Authorization: `Bearer ${token}`,
-    });
-    return this.http.get<Card[]>(url, {
-      headers: headers,
-    });
+    /* const headers = new HttpHeaders({
+       'Content-Type': 'application/json',
+       Accept: 'application/json',
+       Authorization: `Bearer ${token}`,
+     });*/
+    return this.http.get<Card[]>(url);
   }
 
   createCard(card: Partial<Card>): Observable<Card> {
     const url = `${env.apiBaseUrl}/api/projects/cards`;
     const token = this.authService.getToken();
-    const headers = new HttpHeaders({
+    /*const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Accept: 'application/json',
       Authorization: `Bearer ${token}`,
-    });
-    return this.http.post<Card>(url, card, {
-      headers: headers,
-    });
+    });*/
+    return this.http.post<Card>(url, card);
   }
 
   updateCard(id: string, patch: Partial<Card>): Observable<Card> {
     const url = `${env.apiBaseUrl}/api/projects/cards/${id}`;
     const token = this.authService.getToken();
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      Authorization: `Bearer ${token}`,
-    });
-    return this.http.put<Card>(url, patch, {
-      headers: headers,
-    });
+    /* const headers = new HttpHeaders({
+       'Content-Type': 'application/json',
+       Accept: 'application/json',
+       Authorization: `Bearer ${token}`,
+     });*/
+    return this.http.put<Card>(url, patch);
   }
 
   deleteCard(id: string): Observable<void> {
     const url = `${env.apiBaseUrl}/api/projects/cards/${id}`;
     const token = this.authService.getToken();
-    const headers = new HttpHeaders({
+    /*const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Accept: 'application/json',
       Authorization: `Bearer ${token}`,
-    });
-    return this.http.delete<void>(url, {
-      headers: headers,
-    });
+    });*/
+    return this.http.delete<void>(url);
   }
 }
