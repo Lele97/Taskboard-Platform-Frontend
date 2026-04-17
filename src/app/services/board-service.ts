@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { env } from '../environments/env';
 import { Observable } from 'rxjs';
 import { Board } from '../shared/models/board.model';
-import { AuthService } from './auth-service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,29 +10,20 @@ import { AuthService } from './auth-service';
 export class BoardService {
   constructor(
     private readonly http: HttpClient,
-    private readonly authService: AuthService,
   ) {}
 
   getBoards(): Observable<Board[]> {
     const url = `${env.apiBaseUrl}/api/projects/boards`;
-    const token = this.authService.getToken();
-    /*
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      Authorization: `Bearer ${token}`,
-    });*/
     return this.http.get<Board[]>(url);
+  }
+
+  createBoard(board: Partial<Board>): Observable<Board> {
+    const url = `${env.apiBaseUrl}/api/projects/boards`;
+    return this.http.post<Board>(url, board);
   }
 
   getBoardsById(id: string): Observable<Board[]> {
     const url = `${env.apiBaseUrl}/api/projects/boards/${id}`;
-    const token = this.authService.getToken();
-    /*  const headers = new HttpHeaders({
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        Authorization: `Bearer ${token}`,
-      });*/
     return this.http.get<Board[]>(url);
   }
 }

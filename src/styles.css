@@ -1,81 +1,352 @@
-/* Global Styles */
+/* ═══════════════════════════════════════════
+   TASKBOARD – Global Design System
+   ═══════════════════════════════════════════ */
+
+/* ── Google Fonts: Inter ── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* ── CSS Custom Properties ── */
 :root {
-  --primary-color: #4f46e5;
-  --primary-hover: #4338ca;
-  --secondary-color: #10b981;
-  --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --glass-bg: rgba(255, 255, 255, 0.85);
-  --glass-border: rgba(255, 255, 255, 0.4);
-  --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-  --text-main: #1e293b;
-  --text-muted: #64748b;
+  /* Primary palette (app pages) – indigo/purple */
+  --primary:        #4f46e5;
+  --primary-dark:   #4338ca;
+  --primary-light:  #818cf8;
+  --secondary:      #9333ea;
+  --secondary-dark: #7e22ce;
+
+  /* Login palette – orange */
+  --login-start:    #f97316;
+  --login-mid:      #fb923c;
+  --login-end:      #fdba74;
+
+  /* App background gradient (boards / analytics / detail) */
+  --app-bg:         linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+  /* Login background gradient */
+  --login-bg:       linear-gradient(135deg, #f97316 0%, #ea580c 40%, #c2410c 100%);
+
+  /* Glassmorphism */
+  --glass-bg:       rgba(255, 255, 255, 0.88);
+  --glass-border:   rgba(255, 255, 255, 0.45);
+  --glass-shadow:   0 8px 32px rgba(31, 38, 135, 0.28);
+
+  /* Text */
+  --text-main:      #1e293b;
+  --text-muted:     #64748b;
+  --text-light:     #94a3b8;
+
+  /* Status colors */
+  --success:        #10b981;
+  --warning:        #f59e0b;
+  --danger:         #ef4444;
+
+  /* Radiuses */
+  --radius-sm:      8px;
+  --radius-md:      12px;
+  --radius-lg:      16px;
+  --radius-xl:      20px;
+  --radius-2xl:     24px;
+
+  /* Transitions */
+  --transition:     all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Reset & Base ── */
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background: var(--bg-gradient);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: var(--app-bg);
   background-attachment: fixed;
   min-height: 100vh;
   color: var(--text-main);
   display: flex;
   flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 main {
   flex: 1;
 }
 
-.glass-card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-radius: 16px;
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow);
-  padding: 2.5rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.glass-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.45);
-}
-
-.btn-primary {
-  background-color: var(--primary-color) !important;
-  border-color: var(--primary-color) !important;
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  border-radius: 10px;
-  transition: all 0.2s ease;
-}
-
-.btn-primary:hover {
-  background-color: var(--primary-hover) !important;
-  transform: scale(1.02);
-}
-
-.form-control {
-  border-radius: 10px !important;
-  border: 1px solid #e2e8f0 !important;
-  padding: 0.75rem 1rem !important;
-}
-
-.form-control:focus {
-  border-color: var(--primary-color) !important;
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1) !important;
-}
-
-h1, h2, h3, h4 {
+/* ── Typography ── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Inter', sans-serif;
   font-weight: 700;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.03em;
+  color: var(--text-main);
 }
 
+/* ── Gradient Text ── */
 .text-gradient {
-  background: linear-gradient(to right, #4f46e5, #9333ea);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+.text-gradient-orange {
+  background: linear-gradient(135deg, var(--login-start) 0%, #c2410c 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ── Glass Card ── */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  padding: 2rem;
+  transition: var(--transition);
+}
+
+.glass-card-flat {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  padding: 2rem;
+}
+
+/* ── Unified Button System ── */
+
+/* Base button reset */
+.btn {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border-radius: var(--radius-md);
+  padding: 0.625rem 1.25rem;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  border: none;
+  text-decoration: none;
+}
+
+/* Primary – indigo/purple gradient */
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%) !important;
+  color: white !important;
+  border: none !important;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%) !important;
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.45);
+  transform: translateY(-2px);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+}
+
+.btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Outline primary */
+.btn-outline-primary {
+  background: white !important;
+  color: var(--primary) !important;
+  border: 1.5px solid var(--primary) !important;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.1);
+}
+
+.btn-outline-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%) !important;
+  color: white !important;
+  border-color: transparent !important;
+  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35);
+  transform: translateY(-2px);
+}
+
+/* Danger */
+.btn-danger {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  color: white !important;
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
+  box-shadow: 0 6px 18px rgba(239, 68, 68, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Secondary / ghost */
+.btn-secondary, .btn-light {
+  background: #f1f5f9 !important;
+  color: var(--text-muted) !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: none;
+}
+
+.btn-secondary:hover:not(:disabled),
+.btn-light:hover:not(:disabled) {
+  background: #e2e8f0 !important;
+  transform: translateY(-1px);
+}
+
+/* Orange (login page only) */
+.btn-orange {
+  background: linear-gradient(135deg, var(--login-start) 0%, #ea580c 100%);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.4);
+}
+
+.btn-orange:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+  box-shadow: 0 6px 20px rgba(249, 115, 22, 0.5);
+  transform: translateY(-2px);
+  color: white;
+}
+
+.btn-orange:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Link button */
+.btn-link {
+  background: none !important;
+  border: none !important;
+  color: var(--primary) !important;
+  box-shadow: none !important;
+  padding: 0;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.btn-link:hover {
+  color: var(--secondary) !important;
+  text-decoration: underline;
+}
+
+/* Btn sizes */
+.btn-sm {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.8rem;
+  border-radius: var(--radius-sm);
+}
+
+.btn-lg {
+  padding: 0.875rem 2rem;
+  font-size: 1rem;
+  border-radius: var(--radius-lg);
+}
+
+/* ── Form controls ── */
+.form-control {
+  font-family: 'Inter', sans-serif;
+  border-radius: var(--radius-md) !important;
+  border: 1.5px solid #e2e8f0 !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 0.95rem;
+  color: var(--text-main);
+  background: white;
+  transition: var(--transition);
+}
+
+.form-control:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12) !important;
+  outline: none;
+}
+
+.form-control::placeholder {
+  color: var(--text-light);
+}
+
+.form-label {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.01em;
+}
+
+/* Orange focus (login forms) */
+.form-control-orange:focus {
+  border-color: var(--login-start) !important;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15) !important;
+}
+
+/* ── Alerts ── */
+.alert {
+  padding: 0.875rem 1.25rem;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  font-size: 0.9rem;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.alert-danger {
+  background: rgba(239, 68, 68, 0.08);
+  color: #b91c1c;
+  border-left: 3px solid #ef4444;
+}
+
+.alert-success {
+  background: rgba(16, 185, 129, 0.08);
+  color: #065f46;
+  border-left: 3px solid #10b981;
+}
+
+.alert-warning {
+  background: rgba(245, 158, 11, 0.08);
+  color: #92400e;
+  border-left: 3px solid #f59e0b;
+}
+
+/* ── Badge ── */
+.badge {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* ── Spinner ── */
+.spinner-border {
+  border-width: 0.2em;
+}
+
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.18em;
+}
+
+/* ── Utility ── */
+.border-dashed {
+  border-style: dashed !important;
+}
+
+.rounded-xl { border-radius: var(--radius-xl) !important; }
+.rounded-2xl { border-radius: var(--radius-2xl) !important; }

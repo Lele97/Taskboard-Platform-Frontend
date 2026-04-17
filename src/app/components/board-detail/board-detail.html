@@ -1,138 +1,217 @@
 <div class="board-detail-wrapper">
 
+  <!-- ── Header ── -->
   <div class="board-header">
-    <div>
+    <div class="board-header-info">
       @if (board()) {
-        <h1 class="text-gradient mb-1">{{ board()?.name }}</h1>
-        <p class="text-muted mb-0">{{ board()?.description }}</p>
+        <h1>{{ board()?.name }}</h1>
+        <p>
+          <i class="fas fa-align-left me-1"></i>
+          {{ board()?.description || 'Nessuna descrizione' }}
+        </p>
       } @else if (loading()) {
-        <div class="d-flex align-items-center gap-3">
+        <div class="d-flex align-items-center gap-2">
           <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
-          <h2 class="text-muted mb-0">Caricamento board...</h2>
+          <span style="color:#64748b; font-weight:600;">Caricamento board...</span>
         </div>
       }
     </div>
-    <button class="btn btn-outline-primary" routerLink="/boards">
-      <i class="fas fa-arrow-left me-2"></i> Torna alle Board
-    </button>
+
+    <div class="board-header-actions">
+      @let boardId = board()?.id;
+      <button class="btn btn-outline-primary btn-sm" id="btn-board-analytics" (click)="navigateToAnalytics(boardId)">
+        <i class="fas fa-chart-pie me-1"></i> Analytics
+      </button>
+      <button class="btn btn-secondary btn-sm" id="btn-back-boards" routerLink="/boards">
+        <i class="fas fa-arrow-left me-1"></i> Board
+      </button>
+    </div>
   </div>
 
+  <!-- ── Error banner ── -->
   @if (error()) {
-    <div class="container mt-4">
-      <div class="alert alert-danger text-center glass-card">
-        <i class="fas fa-exclamation-triangle me-2"></i> {{ error() }}
-      </div>
+    <div class="error-banner">
+      <i class="fas fa-exclamation-triangle me-2"></i> {{ error() }}
     </div>
   }
 
-  <div class="kanban-container px-4 pb-4">
-    <div cdkDropListGroup class="row g-4 kanban-row">
+  <!-- ── Kanban container ── -->
+  <div class="kanban-container">
+    <div cdkDropListGroup class="row g-0 kanban-row">
       @for (col of columns; track col.key) {
         <div class="col-12 col-md-4">
           <div
-            class="kanban-column glass-card"
+            class="kanban-column"
             cdkDropList
             [id]="col.key"
             [cdkDropListData]="col.key === 'TODO' ? todoCards() : col.key === 'IN_PROGRESS' ? inProgressCards() : doneCards()"
             (cdkDropListDropped)="drop($event)"
           >
-            <div class="column-header d-flex justify-content-between align-items-center mb-4">
-              <h4 class="mb-0">{{ col.title }}</h4>
-              <span class="badge rounded-pill bg-primary opacity-75">
-              {{ (col.key === 'TODO' ? todoCards() : col.key === 'IN_PROGRESS' ? inProgressCards() : doneCards()).length }}
-            </span>
+
+            <!-- Column header -->
+            <div class="column-header">
+              <h4
+                [class.col-title-todo]="col.key === 'TODO'"
+                [class.col-title-inprogress]="col.key === 'IN_PROGRESS'"
+                [class.col-title-done]="col.key === 'DONE'"
+              >
+                @if (col.key === 'TODO') { <i class="fas fa-circle-dot me-2"></i> }
+                @if (col.key === 'IN_PROGRESS') { <i class="fas fa-spinner me-2"></i> }
+                @if (col.key === 'DONE') { <i class="fas fa-circle-check me-2"></i> }
+                {{ col.title }}
+              </h4>
+              <span
+                class="col-badge"
+                [class.col-badge-todo]="col.key === 'TODO'"
+                [class.col-badge-inprogress]="col.key === 'IN_PROGRESS'"
+                [class.col-badge-done]="col.key === 'DONE'"
+              >
+                {{ (col.key === 'TODO' ? todoCards() : col.key === 'IN_PROGRESS' ? inProgressCards() : doneCards()).length }}
+              </span>
             </div>
 
-            <!-- Card List Container -->
-            <div class="card-list d-flex flex-column gap-3">
+            <!-- Card list -->
+            <div class="card-list">
               @for (
-                card of (col.key === 'TODO' ? todoCards() : col.key === 'IN_PROGRESS' ? inProgressCards() : doneCards()); track card.id) {
-                <div class="task-card glass-card p-3" [cdkDragStartDelay]="0" cdkDrag [cdkDragData]="card">
-                  <div *cdkDragPreview class="d-flex justify-content-between align-items-start mb-2">
-                    <h6 class="mb-0 fw-bold">{{ card.title }}</h6>
+                card of (col.key === 'TODO' ? todoCards() : col.key === 'IN_PROGRESS' ? inProgressCards() : doneCards());
+                track card.id
+              ) {
+                <div
+                  class="task-card"
+                  cdkDrag
+                  [cdkDragData]="card"
+                  [cdkDragStartDelay]="0"
+                  [id]="'card-' + card.id"
+                >
+                  <!-- Card top -->
+                  <div class="task-card-top">
+                    <h6 class="task-card-title">{{ card.title }}</h6>
+
+                    <!-- Dropdown menu -->
                     <div class="dropdown">
-                      <button class="btn btn-link p-0 text-muted" type="button" data-bs-toggle="dropdown"
-                              aria-expanded="false">
+                      <button
+                        class="btn-card-menu"
+                        type="button"
+                        [id]="'card-menu-' + card.id"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
                         <i class="fas fa-ellipsis-v"></i>
                       </button>
                       <ul class="dropdown-menu dropdown-menu-end shadow-sm">
                         <li>
-                          <button class="dropdown-item text-danger" (click)="deleteCard(card.id)"><i
-                            class="fas fa-trash-alt me-2"></i>Elimina
+                          <button
+                            class="dropdown-item text-danger"
+                            [id]="'btn-delete-' + card.id"
+                            (click)="deleteCard(card.id)"
+                          >
+                            <i class="fas fa-trash-alt"></i> Elimina
                           </button>
                         </li>
                       </ul>
                     </div>
                   </div>
-                  <p class="small text-muted mb-3">{{ card.description }}</p>
 
-                  <div class="d-flex justify-content-between align-items-center mt-auto">
-                    <div class="d-flex gap-1">
+                  <!-- Description -->
+                  @if (card.description) {
+                    <p class="task-card-desc">{{ card.description }}</p>
+                  }
+
+                  <!-- Footer -->
+                  <div class="task-card-footer">
+                    <div class="task-card-actions">
                       @if (col.key !== 'TODO') {
-                        <button class="btn btn-sm btn-light p-1 px-2" (click)="moveCard(card, 'TODO')"
-                                title="Sposta a sinistra">
+                        <button
+                          class="btn-move"
+                          (click)="moveCard(card, 'TODO')"
+                          title="Sposta a sinistra"
+                        >
                           <i class="fas fa-chevron-left"></i>
                         </button>
                       }
                       @if (col.key !== 'DONE') {
-                        <button class="btn btn-sm btn-light p-1 px-2"
-                                (click)="moveCard(card, col.key === 'TODO' ? 'IN_PROGRESS' : 'DONE')"
-                                title="Sposta a destra">
+                        <button
+                          class="btn-move"
+                          (click)="moveCard(card, col.key === 'TODO' ? 'IN_PROGRESS' : 'DONE')"
+                          title="Sposta a destra"
+                        >
                           <i class="fas fa-chevron-right"></i>
                         </button>
                       }
                     </div>
-                    <small class="text-muted"
-                           style="font-size: 0.7rem;">Modificato: {{ card.updatedAt | date:'shortTime' }}</small>
+                    <span class="task-card-time">
+                      <i class="fas fa-clock me-1" style="opacity:.5"></i>
+                      {{ card.updatedAt | date:'dd/MM HH:mm' }}
+                    </span>
                   </div>
 
                   <!-- Placeholder when dragging -->
                   <div *cdkDragPlaceholder class="task-card-placeholder"></div>
                 </div>
+
               } @empty {
-                <div class="empty-col-message text-center py-5 text-muted small opacity-50 border-dashed rounded-3">
-                  Nessuna card presente
+                <div class="empty-col-message">
+                  <i class="fas fa-inbox d-block mb-2" style="font-size:1.5rem; opacity:.4"></i>
+                  Nessuna task
                 </div>
               }
             </div>
 
-            <!-- Add Card Section -->
-            <div class="mt-auto pt-3">
+            <!-- Add card section -->
+            <div class="add-card-area">
               @if (showCreateFormForCol() === col.key) {
-                <div class="create-card-form glass-card p-3 border-0">
+                <div class="create-card-form">
                   <input
                     type="text"
                     class="form-control mb-2"
-                    placeholder="Inserisci titolo..."
+                    [id]="'input-title-' + col.key"
+                    placeholder="Titolo task..."
                     [(ngModel)]="newCardTitle"
                     (keyup.enter)="createCard(col.key)"
-                  >
+                  />
                   <textarea
-                    class="form-control mb-3"
+                    class="form-control mb-2"
                     rows="2"
+                    [id]="'input-desc-' + col.key"
                     placeholder="Descrizione (opzionale)..."
                     [(ngModel)]="newCardDescription"
                   ></textarea>
-                  <div class="d-flex gap-2">
-                    <button class="btn btn-primary btn-sm px-3" (click)="createCard(col.key)"
-                            [disabled]="loading() || !newCardTitle.trim()">
+                  <div class="create-card-actions">
+                    <button
+                      class="btn btn-primary btn-sm"
+                      [id]="'btn-save-card-' + col.key"
+                      (click)="createCard(col.key)"
+                      [disabled]="loading() || !newCardTitle.trim()"
+                    >
                       @if (loading()) {
-                        <span class="spinner-border spinner-border-sm me-1"></span>
+                        <span class="spinner-border spinner-border-sm"></span>
                       }
-                      Salva
+                      <i class="fas fa-check me-1"></i> Salva
                     </button>
-                    <button class="btn btn-light btn-sm px-3" (click)="resetForm()">Chiudi</button>
+                    <button
+                      class="btn btn-secondary btn-sm"
+                      [id]="'btn-cancel-card-' + col.key"
+                      (click)="resetForm()"
+                    >
+                      <i class="fas fa-times me-1"></i> Annulla
+                    </button>
                   </div>
                 </div>
               } @else {
-                <button class="btn btn-add-card w-100 py-2 border-dashed" (click)="showCreateFormForCol.set(col.key)">
-                  <i class="fas fa-plus me-2"></i> Aggiungi Task
+                <button
+                  class="btn-add-card"
+                  [id]="'btn-add-' + col.key"
+                  (click)="showCreateFormForCol.set(col.key)"
+                >
+                  <i class="fas fa-plus"></i> Aggiungi task
                 </button>
               }
             </div>
+
           </div>
         </div>
       }
     </div>
   </div>
+
 </div>

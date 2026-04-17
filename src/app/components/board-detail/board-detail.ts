@@ -1,5 +1,5 @@
 import { Component, OnInit, signal, computed, Inject, PLATFORM_ID } from '@angular/core';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { BoardService } from '../../services/board-service';
 import { CardService } from '../../services/card-service';
 import { Board } from '../../shared/models/board.model';
@@ -9,10 +9,11 @@ import { FormsModule } from '@angular/forms';
 import {
   CdkDrag,
   CdkDragDrop,
-  CdkDragPlaceholder, CdkDragPreview,
+  CdkDragPlaceholder,
+  CdkDragPreview,
   CdkDropList,
   CdkDropListGroup,
-  moveItemInArray
+  moveItemInArray,
 } from '@angular/cdk/drag-drop';
 
 type ColumnKey = 'TODO' | 'IN_PROGRESS' | 'DONE';
@@ -63,6 +64,7 @@ export class BoardDetail implements OnInit {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly boardService: BoardService,
+    private readonly router: Router,
     private readonly cardService: CardService,
     @Inject(PLATFORM_ID) private readonly platformId: Object,
   ) {}
@@ -104,6 +106,12 @@ export class BoardDetail implements OnInit {
         console.error(err);
       },
     });
+  }
+
+  navigateToAnalytics(boardId: string | undefined): void {
+    if (boardId) {
+      this.router.navigate(['/analytics/boards', boardId]);
+    }
   }
 
   private loadCards(boardId: string): void {
@@ -182,8 +190,8 @@ export class BoardDetail implements OnInit {
       moveItemInArray(newItems, event.previousIndex, event.currentIndex);
       // Se vuoi supportare il riordinamento persistente, dovresti aggiornare un campo "position"
       const col = event.container.id as ColumnKey;
-      this.cards.update(cards => {
-        const others = cards.filter(c => c.column !== col);
+      this.cards.update((cards) => {
+        const others = cards.filter((c) => c.column !== col);
         return [...others, ...newItems];
       });
     } else {

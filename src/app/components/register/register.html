@@ -1,63 +1,64 @@
 <form [formGroup]="form" (ngSubmit)="submit()">
-  <div class="text-center mb-4">
-    <h2 class="mb-3 text-gradient">Create Account</h2>
-  </div>
+  <h2 class="auth-title">Crea account</h2>
+  <p class="auth-subtitle">Unisciti a TaskBoard e organizza i tuoi progetti</p>
 
   <!-- Success Message -->
   @if (success()) {
-    <div class="alert alert-success mt-3 text-center">
-      <i class="fas fa-check-circle me-2"></i> {{ success() }}
+    <div class="auth-alert auth-alert-success">
+      <i class="fas fa-check-circle flex-shrink-0"></i>
+      <span>{{ success() }}</span>
     </div>
   }
 
   <!-- Error Message -->
   @if (error()) {
-    <div class="alert alert-danger mt-3 text-center">
-      <i class="fas fa-exclamation-circle me-2"></i> {{ error() }}
+    <div class="auth-alert auth-alert-danger">
+      <i class="fas fa-exclamation-circle flex-shrink-0"></i>
+      <span>{{ error() }}</span>
     </div>
   }
 
-  <!-- Username input -->
-  <div class="form-outline mb-4">
-    <label class="form-label mb-1 fw-medium" for="registerUsername">Username</label>
+  <!-- Username -->
+  <div class="mb-3">
+    <label class="form-label" for="registerUsername">Username</label>
     <input
       type="text"
       id="registerUsername"
       class="form-control"
       formControlName="username"
       [class.is-invalid]="form.get('username')?.invalid && form.get('username')?.touched"
-      placeholder="Username"
+      placeholder="Scegli un username"
     />
     @if (form.get('username')?.invalid && form.get('username')?.touched) {
-      <div class="invalid-feedback text-danger">
-        @if (form.get('username')?.errors?.['required']) { Username required. }
-        @if (form.get('username')?.errors?.['minlength']) { Username must be at least 3 chars. }
+      <div class="invalid-feedback">
+        @if (form.get('username')?.errors?.['required']) { Username obbligatorio. }
+        @if (form.get('username')?.errors?.['minlength']) { Minimo 3 caratteri. }
       </div>
     }
   </div>
 
-  <!-- Email input -->
-  <div class="form-outline mb-4">
-    <label class="form-label mb-1 fw-medium" for="registerEmail">Email</label>
+  <!-- Email -->
+  <div class="mb-3">
+    <label class="form-label" for="registerEmail">Email</label>
     <input
       type="email"
       id="registerEmail"
       class="form-control"
       formControlName="email"
       [class.is-invalid]="form.get('email')?.invalid && form.get('email')?.touched"
-      placeholder="Email address"
+      placeholder="la-tua@email.com"
     />
     @if (form.get('email')?.invalid && form.get('email')?.touched) {
-      <div class="invalid-feedback text-danger">
-        @if (form.get('email')?.errors?.['required']) { Email required. }
-        @if (form.get('email')?.errors?.['email']) { Invalid email format. }
+      <div class="invalid-feedback">
+        @if (form.get('email')?.errors?.['required']) { Email obbligatoria. }
+        @if (form.get('email')?.errors?.['email']) { Formato email non valido. }
       </div>
     }
   </div>
 
-  <!-- Password input -->
-  <div class="form-outline mb-4">
-    <label class="form-label mb-1 fw-medium" for="registerPassword">Password</label>
+  <!-- Password -->
+  <div class="mb-3">
+    <label class="form-label" for="registerPassword">Password</label>
     <input
       type="password"
       id="registerPassword"
@@ -67,16 +68,16 @@
       placeholder="••••••••"
     />
     @if (form.get('password')?.invalid && form.get('password')?.touched) {
-      <div class="invalid-feedback text-danger">
-        @if (form.get('password')?.errors?.['required']) { Password required. }
-        @if (form.get('password')?.errors?.['minlength']) { Min 6 chars. }
+      <div class="invalid-feedback">
+        @if (form.get('password')?.errors?.['required']) { Password obbligatoria. }
+        @if (form.get('password')?.errors?.['minlength']) { Minimo 6 caratteri. }
       </div>
     }
   </div>
 
-  <!-- Repeat Password input -->
-  <div class="form-outline mb-4">
-    <label class="form-label mb-1 fw-medium" for="registerRepeatPassword">Repeat password</label>
+  <!-- Confirm Password -->
+  <div class="mb-4">
+    <label class="form-label" for="registerRepeatPassword">Conferma password</label>
     <input
       type="password"
       id="registerRepeatPassword"
@@ -86,23 +87,29 @@
       placeholder="••••••••"
     />
     @if (form.get('confirmPassword')?.touched && (form.get('confirmPassword')?.errors || form.hasError('mismatch'))) {
-      <div class="invalid-feedback text-danger">Passwords must match.</div>
+      <div class="invalid-feedback">Le password non coincidono.</div>
     }
   </div>
 
-  <!-- Submit button -->
+  <!-- Submit -->
   <button
+    id="btn-register-submit"
     type="submit"
-    class="btn btn-primary btn-block mb-3 w-100"
+    class="btn btn-orange w-100 mb-3"
     [disabled]="loading() || form.invalid"
   >
     @if (loading()) {
-      <span class="spinner-border spinner-border-sm me-2"></span>
+      <span class="spinner-border spinner-border-sm"></span>
+      Registrazione...
+    } @else {
+      <i class="fas fa-user-plus"></i>
+      Registrati
     }
-    {{ loading() ? 'Signing up...' : 'Sign up' }}
   </button>
 
-  <div class="text-center">
-    <p>Already have an account? <button type="button" (click)="goToLogin()" class="btn btn-link p-0 fw-bold border-0 align-baseline text-decoration-none">Log in</button></p>
+  <!-- Switch -->
+  <div class="auth-switch">
+    Hai già un account?
+    <button type="button" class="switch-link" (click)="goToLogin()">Accedi</button>
   </div>
 </form>

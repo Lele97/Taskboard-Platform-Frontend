@@ -1,96 +1,126 @@
-<div class="auth-wrapper d-flex justify-content-center align-items-center">
-  <div class="glass-card auth-card">
-    <!-- Tab Navigation -->
-    <ul class="nav nav-pills nav-justified mb-4">
-      <li class="nav-item">
-        <button
-          class="nav-link w-100"
-          [class.active]="activeTab() === 'login'"
-          (click)="setTab('login')"
-          type="button"
-          [attr.aria-selected]="activeTab() === 'login'"
-        >Login</button>
-      </li>
-      <li class="nav-item">
-        <button
-          class="nav-link w-100"
-          [class.active]="activeTab() === 'register'"
-          (click)="setTab('register')"
-          type="button"
-          [attr.aria-selected]="activeTab() === 'register'"
-        >Register</button>
-      </li>
-    </ul>
+<div class="auth-page">
 
-    <!-- Tabs content -->
-    <div class="tab-content">
-      <!-- Login Pane -->
-      @if (activeTab() === 'login') {
-        <div class="tab-pane fade show active">
-          <form [formGroup]="form" (ngSubmit)="submit()">
-            <div class="text-center mb-4">
-              <h2 class="mb-3 text-gradient">Taskboard Login</h2>
-            </div>
+  <!-- Brand -->
+  <div class="auth-brand">
 
-            <!-- Email/Username input -->
-            <div class="form-outline mb-4">
-              <label class="form-label mb-1 fw-medium" for="loginName">Username</label>
-              <input
-                type="text"
-                id="loginName"
-                class="form-control"
-                formControlName="username"
-                placeholder="Enter your username"
-              />
-            </div>
-
-            <!-- Password input -->
-            <div class="form-outline mb-4">
-              <label class="form-label mb-1 fw-medium" for="loginPassword">Password</label>
-              <input
-                type="password"
-                id="loginPassword"
-                class="form-control"
-                formControlName="password"
-                placeholder="••••••••"
-              />
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center mb-4">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="loginCheck" checked />
-                <label class="form-check-label" for="loginCheck"> Remember me </label>
-              </div>
-              <a href="#!" class="forgot-link">Forgot password?</a>
-            </div>
-
-            <!-- Error Alert -->
-            @if (error()) {
-              <div class="alert alert-danger mb-4 text-center">
-                <i class="fas fa-exclamation-circle me-2"></i> {{ error() }}
-              </div>
-            }
-
-            <!-- Submit button -->
-            <button type="submit" class="btn btn-primary btn-block mb-4 w-100" [disabled]="loading() || form.invalid">
-              @if (loading()) {
-                <span class="spinner-border spinner-border-sm me-2"></span>
-              }
-              {{ loading() ? 'Signing in...' : 'Sign in' }}
-            </button>
-
-            <!-- Switch to register button -->
-            <div class="text-center">
-              <p>Not a member? <button type="button" (click)="setTab('register')" class="btn btn-link p-0 fw-bold border-0 align-baseline">Register now</button></p>
-            </div>
-          </form>
-        </div>
-      } @else {
-        <!-- Register Pane -->
-        <div class="tab-pane fade show active">
-          <app-register (switchTab)="setTab($any($event))"></app-register>
-        </div>
-      }
+    <div class="brand-icon">
+      <i class="fas fa-clipboard-check"></i>
     </div>
+    <h1>TaskBoard</h1>
+    <p>Organizza il tuo lavoro, ovunque</p>
+  </div>
+
+  <!-- Card -->
+  <div class="auth-card">
+
+    <!-- Tab buttons -->
+    <div class="auth-tabs">
+      <button
+        class="auth-tab-btn"
+        [class.active]="activeTab() === 'login'"
+        (click)="setTab('login')"
+        type="button"
+        id="tab-login"
+        [attr.aria-selected]="activeTab() === 'login'"
+      >
+        <i class="fas fa-sign-in-alt me-1"></i> Accedi
+      </button>
+      <button
+        class="auth-tab-btn"
+        [class.active]="activeTab() === 'register'"
+        (click)="setTab('register')"
+        type="button"
+        id="tab-register"
+        [attr.aria-selected]="activeTab() === 'register'"
+      >
+        <i class="fas fa-user-plus me-1"></i> Registrati
+      </button>
+    </div>
+
+    <!-- Tab content -->
+    @if (activeTab() === 'login') {
+      <!-- ── LOGIN ── -->
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <h2 class="auth-title">Bentornato</h2>
+        <p class="auth-subtitle">Inserisci le tue credenziali per continuare</p>
+
+        <!-- Username -->
+        <div class="mb-3">
+          <label class="form-label" for="loginName">Username</label>
+          <input
+            type="text"
+            id="loginName"
+            class="form-control"
+            formControlName="username"
+            placeholder="Il tuo username"
+          />
+        </div>
+
+        <!-- Password -->
+        <div class="mb-3">
+          <label class="form-label" for="loginPassword">Password</label>
+          <input
+            type="password"
+            id="loginPassword"
+            class="form-control"
+            formControlName="password"
+            placeholder="••••••••"
+          />
+        </div>
+
+        <!-- Remember / forgot -->
+        <div class="auth-row">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="loginCheck" checked />
+            <label class="form-check-label" for="loginCheck">Ricordami</label>
+          </div>
+          <a href="#!" class="forgot-link">Password dimenticata?</a>
+        </div>
+
+        <!-- Error Alert -->
+        @if (error() || formErrors().length) {
+          <div class="auth-alert auth-alert-danger">
+            <i class="fas fa-exclamation-circle mt-1 flex-shrink-0"></i>
+            <div>
+              @if (error()) {
+                <div>{{ error() }}</div>
+              }
+              @for (err of formErrors(); track $index) {
+                <div>{{ err }}</div>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Submit -->
+        <button
+          id="btn-login-submit"
+          type="submit"
+          class="btn btn-orange w-100 mb-3"
+          [disabled]="loading() || form.invalid"
+        >
+          @if (loading()) {
+            <span class="spinner-border spinner-border-sm"></span>
+            Accesso in corso...
+          } @else {
+            <i class="fas fa-sign-in-alt"></i>
+            Accedi
+          }
+        </button>
+
+        <!-- Switch -->
+        <div class="auth-switch">
+          Non hai un account?
+          <button type="button" class="switch-link" (click)="setTab('register')">
+            Registrati ora
+          </button>
+        </div>
+      </form>
+
+    } @else {
+      <!-- ── REGISTER ── -->
+      <app-register (switchTab)="setTab($any($event))"></app-register>
+    }
+
   </div>
 </div>
