@@ -14,10 +14,10 @@
         <button class="btn btn-outline-primary" id="btn-analytics" (click)="navigateToAnalytics()">
           <i class="fas fa-chart-pie me-1"></i> Analytics
         </button>
-        @if (!isOpen()) {
-          <button class="btn btn-primary" id="btn-create-board" (click)="onClick()">
-            <i class="fas fa-plus me-1"></i> Nuova board
-          </button>
+        @if (!isOpen() && !(boards().length === 0)) {
+        <button class="btn btn-primary" id="btn-create-board" (click)="onClick()">
+          <i class="fas fa-plus me-1"></i> Nuova board
+        </button>
         }
       </div>
     </div>
@@ -25,136 +25,130 @@
 
   <!-- ── Create Board Form ── -->
   @if (isOpen()) {
-    <div class="glass-card create-board-card">
-      <div class="create-board-header">
-        <h4><i class="fas fa-chalkboard me-2"></i>Crea nuova board</h4>
-        <button class="btn btn-secondary btn-sm" id="btn-close-create" (click)="onClick()">
-          <i class="fas fa-times me-1"></i> Chiudi
-        </button>
+  <div class="glass-card create-board-card">
+    <div class="create-board-header">
+      <h4><i class="fas fa-chalkboard me-2"></i>Crea nuova board</h4>
+      <button class="btn btn-secondary btn-sm" id="btn-close-create" (click)="onClick()">
+        <i class="fas fa-times me-1"></i> Chiudi
+      </button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="create-board-fields">
+        <div class="field-wrapper">
+          <div class="custom-form-input">
+            <label class="form-label" for="name">
+              <i class="fas fa-tag me-1"></i> Nome
+            </label>
+            <input type="text" id="name" class="form-control" formControlName="name" placeholder="Nome della board" />
+          </div>
+        </div>
+        <div class="field-wrapper">
+          <div class="custom-form-input">
+            <label class="form-label" for="description">
+              <i class="fas fa-align-left me-1"></i> Descrizione
+            </label>
+            <input type="text" id="description" class="form-control" formControlName="description"
+              placeholder="Breve descrizione" />
+          </div>
+        </div>
+        <div class="field-wrapper">
+          <div class="custom-form-input">
+            <label class="form-label" for="ownerUserId">
+              <i class="fas fa-user me-1"></i> Owner User ID
+            </label>
+            <input type="text" id="ownerUserId" class="form-control" formControlName="ownerUserId"
+              placeholder="ID utente proprietario" />
+          </div>
+        </div>
       </div>
 
-      <form [formGroup]="form" (ngSubmit)="submit()">
-        <div class="create-board-fields">
-          <div class="field-wrapper">
-            <div class="custom-form-input">
-              <label class="form-label" for="name">
-                <i class="fas fa-tag me-1"></i> Nome
-              </label>
-              <input type="text" id="name" class="form-control" formControlName="name"
-                     placeholder="Nome della board" />
-            </div>
-          </div>
-          <div class="field-wrapper">
-            <div class="custom-form-input">
-              <label class="form-label" for="description">
-                <i class="fas fa-align-left me-1"></i> Descrizione
-              </label>
-              <input type="text" id="description" class="form-control"
-                     formControlName="description" placeholder="Breve descrizione" />
-            </div>
-          </div>
-          <div class="field-wrapper">
-            <div class="custom-form-input">
-              <label class="form-label" for="ownerUserId">
-                <i class="fas fa-user me-1"></i> Owner User ID
-              </label>
-              <input type="text" id="ownerUserId" class="form-control"
-                     formControlName="ownerUserId" placeholder="ID utente proprietario" />
-            </div>
-          </div>
-        </div>
-
-        <div class="create-board-actions">
-          <button
-            type="submit"
-            id="btn-submit-board"
-            class="btn btn-primary"
-            [disabled]="loading() || form.invalid"
-          >
-            @if (loading()) {
-              <span class="spinner-border spinner-border-sm"></span>
-              Creazione...
-            } @else {
-              <i class="fas fa-plus me-1"></i> Crea Board
-            }
-          </button>
-        </div>
-      </form>
-    </div>
+      <div class="create-board-actions">
+        <button type="submit" id="btn-submit-board" class="btn btn-primary" [disabled]="loading() || form.invalid">
+          @if (loading()) {
+          <span class="spinner-border spinner-border-sm"></span>
+          Creazione...
+          } @else {
+          <i class="fas fa-plus me-1"></i> Crea Board
+          }
+        </button>
+      </div>
+    </form>
+  </div>
   }
 
   <!-- ── Error ── -->
   @if (error()) {
-    <div class="error-alert">
-      <div class="error-icon">
-        <i class="fas fa-exclamation-triangle"></i>
-      </div>
-      <div class="flex-grow-1">
-        <strong>Errore!</strong>
-        <p>{{ error() }}</p>
-      </div>
-      <button class="btn btn-outline-primary btn-sm" (click)="loadBoards()">
-        <i class="fas fa-sync-alt me-1"></i> Riprova
-      </button>
+  <div class="error-alert">
+    <div class="error-icon">
+      <i class="fas fa-exclamation-triangle"></i>
     </div>
+    <div class="flex-grow-1">
+      <strong>Errore!</strong>
+      <p>{{ error() }}</p>
+    </div>
+    <button class="btn btn-outline-primary btn-sm" (click)="loadBoards()">
+      <i class="fas fa-sync-alt me-1"></i> Riprova
+    </button>
+  </div>
   }
 
   <!-- ── Loading ── -->
   @if (loading()) {
-    <div class="loading-container">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Caricamento...</span>
-      </div>
-      <p>Caricamento delle tue board...</p>
+  <div class="loading-container">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Caricamento...</span>
     </div>
+    <p>Caricamento delle tue board...</p>
+  </div>
   }
 
   <!-- ── Boards grid ── -->
   @if (!loading() && !error() && boards() && boards().length > 0) {
-    <div class="boards-grid">
-      @for (board of boards(); track board.id) {
-        <div class="board-card" [id]="'board-' + board.id" (click)="navigateToBoard(board.id)">
-          <div class="board-card-image">
-            <div class="image-placeholder">
-              <i class="fas fa-chalkboard"></i>
-            </div>
-          </div>
-          <div class="board-card-content">
-            <h5 class="board-title">{{ board.name }}</h5>
-            @if (board.description) {
-              <p class="board-description">{{ board.description }}</p>
-            } @else {
-              <p class="board-description fst-italic" style="opacity:.6">Nessuna descrizione</p>
-            }
-            <div class="board-meta">
-              <small>
-                <i class="fas fa-user"></i> {{ board.ownerUserId }}
-              </small>
-              <small>
-                <i class="fas fa-clock"></i> {{ board.updatedAt | date:'dd/MM/yy' }}
-              </small>
-            </div>
-            <div class="board-progress">
-              <div class="board-progress-bar" style="width: 65%"></div>
-            </div>
-          </div>
+  <div class="boards-grid">
+    @for (board of boards(); track board.id) {
+    <div class="board-card" [id]="'board-' + board.id" (click)="navigateToBoard(board.id)">
+      <div class="board-card-image">
+        <div class="image-placeholder">
+          <i class="fas fa-chalkboard"></i>
         </div>
-      }
+      </div>
+      <div class="board-card-content">
+        <h5 class="board-title">{{ board.name }}</h5>
+        @if (board.description) {
+        <p class="board-description">{{ board.description }}</p>
+        } @else {
+        <p class="board-description fst-italic" style="opacity:.6">Nessuna descrizione</p>
+        }
+        <div class="board-meta">
+          <small>
+            <i class="fas fa-user"></i> {{ board.ownerUserId }}
+          </small>
+          <small>
+            <i class="fas fa-clock"></i> {{ board.updatedAt | date:'dd/MM/yy' }}
+          </small>
+        </div>
+        <div class="board-progress">
+          <div class="board-progress-bar" style="width: 65%"></div>
+        </div>
+      </div>
     </div>
+    }
+  </div>
   }
 
   <!-- ── Empty state ── -->
   @if (!loading() && !error() && boards() && boards().length === 0) {
-    <div class="empty-state">
-      <div class="empty-icon">
-        <i class="fas fa-chalkboard"></i>
-      </div>
-      <h4>Nessuna board trovata</h4>
-      <p>Non hai ancora creato nessuna board.<br>Inizia ora per organizzare le tue attività.</p>
-      <button class="btn btn-primary btn-lg" id="btn-empty-create" (click)="onClick()">
-        <i class="fas fa-plus me-2"></i> Crea la tua prima board
-      </button>
+  <div class="empty-state">
+    <div class="empty-icon">
+      <i class="fas fa-chalkboard"></i>
     </div>
+    <h4>Nessuna board trovata</h4>
+    <p>Non hai ancora creato nessuna board.<br>Inizia ora per organizzare le tue attività.</p>
+    <button class="btn btn-primary btn-lg" id="btn-empty-create" (click)="onClick()">
+      <i class="fas fa-plus me-2"></i> Crea la tua prima board
+    </button>
+  </div>
   }
 
 </div>
