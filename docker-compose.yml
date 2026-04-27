@@ -1,0 +1,17 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: taskboard-frontend
+    ports:
+      - "4200:4200"
+    networks:
+      - taskboard-network
+
+networks:
+  taskboard-network:
+    external: true
+    name: taskboard-network
+      
+ 

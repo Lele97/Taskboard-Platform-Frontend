@@ -1,13 +1,14 @@
-FROM node:20-alpine AS builder
+# Stage 1: Build Angular
+FROM node:20-alpine AS build
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
-RUN npm run build --configuration=production
+RUN npm run build -- --configuration=production
 
-FROM node:20-alpine
-WORKDIR /app
-COPY --from=builder /app/dist/taskboard-frontend ./dist/taskboard-frontend
-EXPOSE 4000
-ENV PORT=4000
-CMD ["node", "dist/taskboard-frontend/server/server.mjs"]
+# Stage 2: Serve with Nginx
+FROM nginx:alpine
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/dist/taskboard-frontend/browser /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
