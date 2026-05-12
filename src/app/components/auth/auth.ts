@@ -6,6 +6,7 @@ import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { Register } from '../register/register';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { startWith } from 'rxjs';
+import { env } from '../../environments/env';
 
 @Component({
   selector: 'app-auth',
@@ -49,6 +50,13 @@ export class Auth {
   setTab(tab: 'login' | 'register'): void {
     this.activeTab.set(tab);
     this.error.set(null);
+  }
+
+  isProduction() {
+    if (env.production) {
+      return true;
+    }
+    return false;
   }
 
   submit(): void {

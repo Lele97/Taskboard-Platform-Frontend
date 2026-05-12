@@ -10,118 +10,96 @@
     <p>Organizza il tuo lavoro, ovunque</p>
   </div>
 
-  <h1>TEST PRODUZIONE 123</h1>
+  @if(isProduction()){
+  <h1 class="prod-badge">PRODUZIONE</h1>
+  } @else {
+  <h1 class="dev-badge">DEV</h1>
+  }
 
   <!-- Card -->
   <div class="auth-card">
 
     <!-- Tab buttons -->
     <div class="auth-tabs">
-      <button
-        class="auth-tab-btn"
-        [class.active]="activeTab() === 'login'"
-        (click)="setTab('login')"
-        type="button"
-        id="tab-login"
-        [attr.aria-selected]="activeTab() === 'login'"
-      >
+      <button class="auth-tab-btn" [class.active]="activeTab() === 'login'" (click)="setTab('login')" type="button"
+        id="tab-login" [attr.aria-selected]="activeTab() === 'login'">
         <i class="fas fa-sign-in-alt me-1"></i> Accedi
       </button>
-      <button
-        class="auth-tab-btn"
-        [class.active]="activeTab() === 'register'"
-        (click)="setTab('register')"
-        type="button"
-        id="tab-register"
-        [attr.aria-selected]="activeTab() === 'register'"
-      >
+      <button class="auth-tab-btn" [class.active]="activeTab() === 'register'" (click)="setTab('register')"
+        type="button" id="tab-register" [attr.aria-selected]="activeTab() === 'register'">
         <i class="fas fa-user-plus me-1"></i> Registrati
       </button>
     </div>
 
     <!-- Tab content -->
     @if (activeTab() === 'login') {
-      <!-- ── LOGIN ── -->
-      <form [formGroup]="form" (ngSubmit)="submit()">
-        <h2 class="auth-title">Bentornato</h2>
-        <p class="auth-subtitle">Inserisci le tue credenziali per continuare</p>
+    <!-- ── LOGIN ── -->
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <h2 class="auth-title">Bentornato</h2>
+      <p class="auth-subtitle">Inserisci le tue credenziali per continuare</p>
 
-        <!-- Username -->
-        <div class="mb-3">
-          <label class="form-label" for="loginName">Username</label>
-          <input
-            type="text"
-            id="loginName"
-            class="form-control"
-            formControlName="username"
-            placeholder="Il tuo username"
-          />
+      <!-- Username -->
+      <div class="mb-3">
+        <label class="form-label" for="loginName">Username</label>
+        <input type="text" id="loginName" class="form-control" formControlName="username"
+          placeholder="Il tuo username" />
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3">
+        <label class="form-label" for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" class="form-control" formControlName="password"
+          placeholder="••••••••" />
+      </div>
+
+      <!-- Remember / forgot -->
+      <div class="auth-row">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="loginCheck" checked />
+          <label class="form-check-label" for="loginCheck">Ricordami</label>
         </div>
+        <a href="#!" class="forgot-link">Password dimenticata?</a>
+      </div>
 
-        <!-- Password -->
-        <div class="mb-3">
-          <label class="form-label" for="loginPassword">Password</label>
-          <input
-            type="password"
-            id="loginPassword"
-            class="form-control"
-            formControlName="password"
-            placeholder="••••••••"
-          />
-        </div>
-
-        <!-- Remember / forgot -->
-        <div class="auth-row">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="loginCheck" checked />
-            <label class="form-check-label" for="loginCheck">Ricordami</label>
-          </div>
-          <a href="#!" class="forgot-link">Password dimenticata?</a>
-        </div>
-
-        <!-- Error Alert -->
-        @if (error() || formErrors().length) {
-          <div class="auth-alert auth-alert-danger">
-            <i class="fas fa-exclamation-circle mt-1 flex-shrink-0"></i>
-            <div>
-              @if (error()) {
-                <div>{{ error() }}</div>
-              }
-              @for (err of formErrors(); track $index) {
-                <div>{{ err }}</div>
-              }
-            </div>
-          </div>
-        }
-
-        <!-- Submit -->
-        <button
-          id="btn-login-submit"
-          type="submit"
-          class="btn btn-orange w-100 mb-3"
-          [disabled]="loading() || form.invalid"
-        >
-          @if (loading()) {
-            <span class="spinner-border spinner-border-sm"></span>
-            Accesso in corso...
-          } @else {
-            <i class="fas fa-sign-in-alt"></i>
-            Accedi
+      <!-- Error Alert -->
+      @if (error() || formErrors().length) {
+      <div class="auth-alert auth-alert-danger">
+        <i class="fas fa-exclamation-circle mt-1 flex-shrink-0"></i>
+        <div>
+          @if (error()) {
+          <div>{{ error() }}</div>
           }
-        </button>
-
-        <!-- Switch -->
-        <div class="auth-switch">
-          Non hai un account?
-          <button type="button" class="switch-link" (click)="setTab('register')">
-            Registrati ora
-          </button>
+          @for (err of formErrors(); track $index) {
+          <div>{{ err }}</div>
+          }
         </div>
-      </form>
+      </div>
+      }
+
+      <!-- Submit -->
+      <button id="btn-login-submit" type="submit" class="btn btn-orange w-100 mb-3"
+        [disabled]="loading() || form.invalid">
+        @if (loading()) {
+        <span class="spinner-border spinner-border-sm"></span>
+        Accesso in corso...
+        } @else {
+        <i class="fas fa-sign-in-alt"></i>
+        Accedi
+        }
+      </button>
+
+      <!-- Switch -->
+      <div class="auth-switch">
+        Non hai un account?
+        <button type="button" class="switch-link" (click)="setTab('register')">
+          Registrati ora
+        </button>
+      </div>
+    </form>
 
     } @else {
-      <!-- ── REGISTER ── -->
-      <app-register (switchTab)="setTab($any($event))"></app-register>
+    <!-- ── REGISTER ── -->
+    <app-register (switchTab)="setTab($any($event))"></app-register>
     }
 
   </div>

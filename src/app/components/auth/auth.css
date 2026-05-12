@@ -165,6 +165,28 @@
   -webkit-text-fill-color: transparent;
 }
 
+/* ── Environment Badges ── */
+.prod-badge, .dev-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.prod-badge {
+  background: #dc2626; /* red-600 */
+  color: white;
+}
+
+.dev-badge {
+  background: #16a34a; /* green-600 */
+  color: white;
+}
+
+
 .auth-subtitle {
   color: #64748b;
   font-size: 0.875rem;
