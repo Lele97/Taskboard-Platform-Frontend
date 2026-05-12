@@ -70,7 +70,8 @@
     @if (form.get('password')?.invalid && form.get('password')?.touched) {
       <div class="invalid-feedback">
         @if (form.get('password')?.errors?.['required']) { Password obbligatoria. }
-        @if (form.get('password')?.errors?.['minlength']) { Minimo 6 caratteri. }
+        @if (form.get('password')?.errors?.['minlength']) { Minimo 8 caratteri. }
+        @if (form.get('password')?.errors?.['pattern']) { La password deve contenere almeno 8 caratteri, una maiuscola, un numero e un carattere speciale (@#$%^&+=). }
       </div>
     }
   </div>
