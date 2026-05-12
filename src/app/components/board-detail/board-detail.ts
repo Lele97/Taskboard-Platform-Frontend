@@ -52,9 +52,9 @@ export class BoardDetail implements OnInit {
   ];
 
   // Filtra le card per colonna usando un computed signal
-  todoCards = computed(() => this.cards().filter((c) => c.column === 'TODO'));
-  inProgressCards = computed(() => this.cards().filter((c) => c.column === 'IN_PROGRESS'));
-  doneCards = computed(() => this.cards().filter((c) => c.column === 'DONE'));
+  todoCards       = computed(() => Array.isArray(this.cards()) ? this.cards().filter((c) => c.column?.toUpperCase() === 'TODO')        : []);
+  inProgressCards = computed(() => Array.isArray(this.cards()) ? this.cards().filter((c) => c.column?.toUpperCase() === 'IN_PROGRESS') : []);
+  doneCards       = computed(() => Array.isArray(this.cards()) ? this.cards().filter((c) => c.column?.toUpperCase() === 'DONE')        : []);
 
   // Form stato
   newCardTitle = '';
@@ -115,15 +115,20 @@ export class BoardDetail implements OnInit {
   }
 
   private loadCards(boardId: string): void {
+    console.log('Loading cards for board:', boardId);
     this.cardService.getCardsByBoard(boardId).subscribe({
-      next: (cards) => {
+      next: (res: any) => {
+        console.log('Cards response:', res);
+        // The API may return an array directly or a wrapped object
+        const cards: Card[] = Array.isArray(res) ? res : (res?.content ?? res?.data ?? []);
+        console.log('Processed cards:', cards);
         this.cards.set(cards);
         this.loading.set(false);
       },
       error: (err) => {
         this.loading.set(false);
         this.error.set('Errore nel caricamento delle card');
-        console.error(err);
+        console.error('Error loading cards:', err);
       },
     });
   }

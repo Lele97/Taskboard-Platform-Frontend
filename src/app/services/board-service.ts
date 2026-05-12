@@ -22,8 +22,8 @@ export class BoardService {
     return this.http.post<Board>(url, board);
   }
 
-  getBoardsById(id: string): Observable<Board[]> {
+  getBoardsById(id: string): Observable<Board> {
     const url = `${env.apiBaseUrl}/api/projects/boards/${id}`;
-    return this.http.get<Board[]>(url);
+    return this.http.get<Board>(url);
   }
 }

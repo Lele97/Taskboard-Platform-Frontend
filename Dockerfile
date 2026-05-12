@@ -8,7 +8,9 @@ RUN npm run build -- --configuration=production
 
 # Stage 2: Serve with Nginx
 FROM nginx:alpine
+RUN rm -rf /usr/share/nginx/html/*
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/dist/taskboard-frontend/browser /usr/share/nginx/html
+RUN if [ -f /usr/share/nginx/html/index.csr.html ]; then cp /usr/share/nginx/html/index.csr.html /usr/share/nginx/html/index.html; fi
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
