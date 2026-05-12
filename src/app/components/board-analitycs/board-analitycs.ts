@@ -1,7 +1,7 @@
 import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { Chart, ChartConfiguration, ChartType, registerables } from 'chart.js';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { AnalyticsService } from '../../services/analytics.service';
+import { AnalyticsService } from '../../services/analytics-service';
 import { CommonModule } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -78,7 +78,7 @@ export class BoardAnalitycs implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private analyticsService: AnalyticsService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const boardId = this.route.snapshot.paramMap.get('boardId');
